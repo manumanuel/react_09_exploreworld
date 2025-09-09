@@ -2,8 +2,10 @@ import Spinner from "./Spinner";
 import styles from "./CountryList.module.css";
 import Message from "./Message";
 import CountryItem from "./CountryItem";
+import { useCities } from "../../contexts/useCities";
 
-function CountryList({ cities, loadingStatus }) {
+function CountryList() {
+  const { cities, loadingStatus } = useCities();
   if (loadingStatus) return <Spinner />;
   if (cities.length === 0) return <Message message="No countries added." />;
 

@@ -137,6 +137,87 @@ These nested routes content can be shown within <Outlet /> component
 - 3. By replacing history
   - <Route index element={<Navigate to="cities" replace />} />
 
+# CONTEXT API
+
+- is a way to **share state/data globally** across components without prop drilling
+  ie passing props down to many levels
+  eg: authentication, settings, theme, language apply
+  -Steps
+  1. Create Context
+     import {createContext} from "react"
+     const MyContext = createContext();
+  2. Provide Context (wrap parent)
+     <MyContext.Provider value={/_data_/}>
+     <App>
+     </MyContext.Provider>
+  3. Consume Context
+     using useContext
+     import {useContext} from "react";
+     const value = useContext(MyContext);
+
+# CONTEXT API + useReducer
+
+- context API -> make state accessible globally
+- useReducer -> manage complex state updates in a predictable way
+- By combining these we can implement a **Centralized global state management**
+- steps
+
+  1. Create Context
+     import {createContext, useReducer} from "react";
+     const AuthContext = createContext();
+  2. Define Reducer
+     const initialState={isAuthenticated:false, user:null};
+     function AuthReducer(state, action){
+     switch (action.type) {
+     case "Login":
+     return {...state, isAuthenticated: true, user: action.payload};
+     case "Logout":
+     return {...state, isAuthenticated: false, user: null};
+     default:
+     return state;
+     }
+     }
+  3. Provide Context
+     export function AuthProvider({children}){
+     const [state, dispatch]= useReducer(authReducer, initialState);
+     return (
+     <AuthContext.Provider value={{state, dispatch}}>
+     {children}
+     </AuthContext.Provider>
+     );
+     }
+  4. Consume Context
+     import { useContext } from "react";
+     import { AuthContext } from "./AuthContext";
+
+     function Profile() {
+     const { state, dispatch } = useContext(AuthContext);
+
+     return (
+
+        <div>
+        {state.isAuthenticated ? (
+        <>
+        <p>Welcome, {state.user.name}</p>
+        <button onClick={() => dispatch({ type: "LOGOUT" })}>
+        Logout
+        </button>
+        </>
+        ) : (
+        <button
+        onClick={() =>
+        dispatch({
+        type: "LOGIN",
+        payload: { name: "Jack", email: "jack@example.com" },
+        })
+        } >
+        Login
+        </button>
+        )}
+        </div>
+        );
+        }
+
 # Apply CSS Styles
 
 - global styles are added in src folder and then import to Main.jsx
@@ -144,3 +225,9 @@ These nested routes content can be shown within <Outlet /> component
 - then import in selected component and use like props
 - to apply an external css style we should add that in :global()
   eg: to add an active class which is applied a component style :global(.active)
+
+  ### Edit vs code user settings
+
+  - command pallette - ctrl + shift + p
+    -type, Open User Settings (JSON) → opens your global settings.
+    -type, Open Workspace Settings (JSON) → opens settings specific to the current project.
