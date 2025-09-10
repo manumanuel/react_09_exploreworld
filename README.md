@@ -218,6 +218,28 @@ These nested routes content can be shown within <Outlet /> component
         );
         }
 
+# Performance Optimization techniques
+
+1. Prevent wasted renders
+   - memo, useMemo, useCallback, passing elements as children or regular prop
+2. Improve app speed and responsiveness
+   - useMemo, useCallback, useTransition
+3. Reduce bundle size
+   - using fewer 3rd party packages
+   - code splitting & lazy loading
+
+# Re-render happens in 3 diff situations
+
+1. State changes
+2. Context changes
+3. Parent re-renders
+   - create a false impression that changing props re-renders a component.
+     But this is not true
+
+Note: A **render** doesn't mean that DOM actually get updated, it just means
+component function gets called. But this can be an expensive operation.
+**Wasted Render** means, a render that didn't produce any change in DOM
+
 # Apply CSS Styles
 
 - global styles are added in src folder and then import to Main.jsx
